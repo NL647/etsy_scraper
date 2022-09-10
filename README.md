@@ -1,5 +1,5 @@
 # etsy_scraper
-Scrape data from etsy + keyword analysis.
+A script to scrape data from etsy + keyword analysis.
 
 
 
