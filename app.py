@@ -8,7 +8,7 @@ from termcolor import colored
 os.system('color')
 
 
-search = input('What product do search for\n')
+search = input('What product do you search for\n')
 sCleaned = search.replace(" ", "+")
 # print(sCleaned)
 
@@ -64,7 +64,7 @@ for item in soup.select('.v2-listing-card__info'):
 		print(colored(f"Extra Infos: {extra}" , 'blue', attrs=['bold', 'blink']))
   
 		print('----------------------------------------')
-		# Append 'hello' at the end of file
+		# Append at the end of file
 		file_object.write(titre)
 		# Close the file
 		file_object.close()
