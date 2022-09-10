@@ -1,5 +1,5 @@
 # etsy_scraper
-scrape sata from etsy
+Scrape data from etsy + keyword analysis.
 
 
 
