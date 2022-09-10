@@ -10,3 +10,4 @@ Scrape data from etsy + keyword analysis.
 ```
 python etsy.py
 ```
+![My Image](capture.pbg)
