@@ -76,9 +76,9 @@ for item in soup.select('.v2-listing-card__info'):
 		# print(item.select('.wt-text-caption')[0]['src'])
 
 	except Exception as e:
-		# raise e
+		raise e
 
-		b=0
+		
 with open('text.txt', 'r') as file:
     data = file.read().replace('\n', '')  
 str = data
