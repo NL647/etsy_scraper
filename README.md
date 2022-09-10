@@ -6,7 +6,8 @@ scrape sata from etsy
 ### Executing program
 
 * How to run the program
-* Step-by-step bullets
+* Python3.8 + 
+* install BeautifulSoup, termcolor, requests, prettytable
 ```
 python etsy.py
 ```
