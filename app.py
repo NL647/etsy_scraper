@@ -1,90 +1,90 @@
 
 # -*- coding: utf-8 -*-
-from bs4 import BeautifulSoup
-import requests
 import os
-from prettytable import PrettyTable
+import requests
+from bs4 import BeautifulSoup
 from termcolor import colored
-os.system('color')
-import sys
+from prettytable import PrettyTable
 
-#for encoding € char
-sys.stdin.reconfigure(encoding='utf-8')
-sys.stdout.reconfigure(encoding='utf-8')
-
-
-search = input('What product do search for\n')
-sCleaned = search.replace(" ", "+")
-# print(sCleaned)
-
+# Set headers
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9'}
-url = "https://www.etsy.com/fr/search?q={}&explicit=1&order=highest_reviews".format(sCleaned)
+
+# Get search term and construct URL
+sCleaned = input("Search Etsy: ")
+url = "https://www.etsy.com/search?q={}&explicit=1&order=highest_reviews".format(sCleaned)
+
+# Make request to URL
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.content, 'lxml')
 
 # Python code to find frequency of each word in the title of products for SEO
 def freq(str):
- 
+    # convert the string to lowercase
+    str = str.lower()
+
     # break the string into list of words
-    str = str.split()        
-    str2 = []
-    #remove those words from occurence count
-    str3 = ["is", "-", "/", "et", "avec","de", "a", "•", '|', "la", "le", "the", "pour", "and", "of", "&", ",", ".","en", ":", "des", "d'", "à", "d’", "les"]
- 
+    str = str.split()
+
+    # words to exclude from the count
+    str3 = ["is", "-", "/", "et", "avec","de", "a", "•", "." "|", "la", "le", "the", "pour", "and", "of", "&", ",", ".","en", ":", "des", "d'", "à", "d’", "les", "aux", "a", "|"]
+
     # loop till string values present in list str
-    for i in str:            
- 
+    str2 = []
+    for i in str:
         # checking for the duplicate
         if i not in str2 and i not in str3:
- 
             # insert value in str2
             str2.append(i)
-             
-    for i in range(0, len(str2)):
- 
-        # count the frequency of each word(present
-        # in str2) in str and print
-        if str.count(str2[i]) > 2:
-            
-            
-        	print('Frequency of', str2[i], 'is :', str.count(str2[i]))
 
-         
-        
-#Display data in the console        
+    # create a dictionary to store the frequency of each word
+    freq_dict = {}
+    for word in str2:
+        freq_dict[word] = str.count(word)
+
+    # sort the dictionary by value (frequency) in descending order
+    sorted_freq_dict = sorted(freq_dict.items(), key=lambda x: x[1], reverse=True)
+
+    # print the result
+    table = PrettyTable(['Word', 'Frequency'])
+    for word, freq in sorted_freq_dict:
+        if freq > 2:
+            table.add_row([word, freq])
+    print(table)
+
+# Get data from soup object
+items = []
 for item in soup.select('.v2-listing-card__info'):
-	try:
-		file_object = open('text.txt', 'a')
-  
-		titre = item.select('h3')[0].get_text().strip()
-		prix = item.select('.currency-value')[0].get_text().strip()
-		stars = item.select('.wt-screen-reader-only')[0].get_text().strip()
-		extra = item.select('.wt-text-caption')[1].get_text().strip()
-		print('----------------------------------------')
+    try:
+        titre = item.select('h3')[0].get_text().strip()
+        prix = item.select('.currency-value')[0].get_text().strip()
+        stars = item.select('input[name="initial-rating"]')[0]['value']   
+        extra = item.select('.wt-text-caption')[1].get_text().strip()
 
-		print(colored(f"TITRE: {titre}\n" , 'white', attrs=['bold', 'blink']))
-		print(colored(f'Prix en EUROS: {prix}', 'green', attrs=['reverse', 'blink'] , ))
-		print(colored(f"Stars: {stars}" , 'yellow', attrs=['reverse', 'blink']))
-		print(colored(f"Number of Reviews: {extra}" , 'blue', attrs=['bold', 'blink']))
-  
-		print('----------------------------------------')
-		# Append data to file
-		file_object.write(titre)
-		# Close the file
-		file_object.close()
-		# print(item)
-		# print(item.select('h3')[0].get_text().strip())
-		# print(item.select('.currency-value')[0].get_text().strip())
-		# print(item.select('.wt-screen-reader-only')[0].get_text().strip())
-		# print(item.select('.wt-text-caption')[1].get_text().strip())
-		# print(item.select('.wt-text-caption')[0]['src'])
+        # Append data to list
+        items.append({
+            "titre": titre,
+            "prix": prix,
+            "stars": stars,
+            "extra": extra
+        })
 
-	except Exception as e:
-		raise e
+    except Exception as e:
+        raise e
 
+# Sort items by stars from higher value to lower
+sorted_items = sorted(items, key=lambda x: float(x['stars']), reverse=True)
 
-with open('text.txt', 'r') as file:
-    data = file.read().replace('\n', '')  
-freq(data)
-#delete tmp file
-os.remove("text.txt")
+# Create table to display data
+table = PrettyTable(['Title', 'Price EUR', 'Stars', 'Num Reviews'])
+for item in sorted_items:
+    titre = item["titre"]
+    prix = item["prix"]
+    stars = item["stars"]
+    extra = item["extra"]
+
+    # Add row to table
+    table.add_row([titre, prix, stars, extra])
+
+# Display table in console
+print(table)
+
