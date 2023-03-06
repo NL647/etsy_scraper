@@ -10,4 +10,4 @@ A script to scrape data from etsy + keyword analysis.
 ```
 python etsy.py
 ```
-![My Image](Capt.PNG)
+![My Image](Capt1.PNG)
