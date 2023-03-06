@@ -11,6 +11,9 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleW
 sCleaned = input("Search Etsy: ")
 url = "https://www.etsy.com/search?q={}&explicit=1&order=highest_reviews".format(sCleaned)
 
+#clean old txt file
+os.remove("text.txt")
+
 # Make request to URL
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.content, 'lxml')
