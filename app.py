@@ -1,5 +1,3 @@
-
-# -*- coding: utf-8 -*-
 import os
 import requests
 from bs4 import BeautifulSoup
@@ -26,7 +24,7 @@ def freq(str):
     str = str.split()
 
     # words to exclude from the count
-    str3 = ["is", "-", "/", "et", "avec","de", "a", "•", "." "|", "la", "le", "the", "pour", "and", "of", "&", ",", ".","en", ":", "des", "d'", "à", "d’", "les", "aux", "a", "|"]
+    str3 = ["is", "-", "/", "et", "avec","de", "a", "•", ".", "|", "la", "le", "the", "pour", "and", "of", "&", ",", ".", "en", ":", "des", "d'", "à", "d’", "les", "aux", "a", "|"]
 
     # loop till string values present in list str
     str2 = []
@@ -45,13 +43,11 @@ def freq(str):
     sorted_freq_dict = sorted(freq_dict.items(), key=lambda x: x[1], reverse=True)
 
     # print the result
-    table = PrettyTable(['Word', 'Frequency'])
     for word, freq in sorted_freq_dict:
         if freq > 2:
-            table.add_row([word, freq])
-    print(table)
+            print('Frequency of [ ', word, ' ] is :', freq)
 
-# Get data from soup object
+
 items = []
 for item in soup.select('.v2-listing-card__info'):
     try:
@@ -84,7 +80,16 @@ for item in sorted_items:
 
     # Add row to table
     table.add_row([titre, prix, stars, extra])
+    file_object = open('text.txt', 'a')
+    file_object.write(titre)
+        # Close the file
+    file_object.close()
 
 # Display table in console
 print(table)
+
+with open('text.txt', 'r') as file:
+    data = file.read().replace('\n', '') 
+freq(data)
+
 
