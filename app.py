@@ -92,7 +92,10 @@ for item in sorted_items:
 print(table)
 
 with open('text.txt', 'r') as file:
-    data = file.read().replace('\n', '') 
+    data = file.read().replace('\n', '')
+    
+print("\n== WORDS FREQUENCY ==\n")    
 freq(data)
+print("\n====\n") 
 
 
